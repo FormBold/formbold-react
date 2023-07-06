@@ -1,25 +1,26 @@
 {
   "name": "formbold-react",
   "version": "1.0.0",
-  "description": "",
+  "description": "Formbold package for react.",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FormBold/formbold-react"
   },
+  "author": "Formbold Team <hello@formbold.com> (https://formbold.com/)",
+  "homepage": "https://formbold.com/",
   "scripts": {
     "build": "tsc"
   },
-  "author": "",
   "license": "MIT",
   "devDependencies": {
     "typescript": "^5.1.6",
-    "@types/react-dom": ">=18.2.6"
+    "@types/react-dom": "^18.2.6"
   },
   "peerDependencies": {
     "@types/react": "^18.2.14",
-    "react": ">=18.2.0",
-    "react-dom": ">=18.2.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "bugs": {
     "url": "https://github.com/FormBold/formbold-react/issues"
