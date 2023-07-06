@@ -1,4 +1,3 @@
-
 name: 🚀 formbold react release
 
 on:
@@ -18,13 +17,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 18
 
+      - name: Clear npm cache
+        run: npm cache clean --force
       - name: Delete node_modules
         run: rm -rf node_modules
 
       - name: Install dependencies
-        run: npm i
+        run: npm ci
 
       - name: Build
         run: npm run build # Replace with your build command if needed
