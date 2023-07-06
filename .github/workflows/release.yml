@@ -23,7 +23,7 @@ jobs:
         run: rm -rf node_modules
 
       - name: Install dependencies
-        run: npm ci
+        run: npm i
 
       - name: Build
         run: npm run build # Replace with your build command if needed
