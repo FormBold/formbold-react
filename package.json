@@ -1,6 +1,6 @@
 {
   "name": "formbold-react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Formbold package for react.",
   "main": "dist/index.js",
   "repository": {
