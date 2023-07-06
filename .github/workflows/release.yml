@@ -1,0 +1,28 @@
+name: 🚀 formbold react release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  release:
+    name: 🚀 formbold react release
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📚 checkout
+        uses: actions/checkout@v2
+      - name: 🟢 node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org
+      - name: installing packages
+        run: npm ci
+      - name: build
+        run: npm run build  # Replace with your build command if needed
+      - name: 🚀 publish
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN_FORMBOLDREACT}}
