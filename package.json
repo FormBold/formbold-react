@@ -20,7 +20,7 @@
     "web-form",
     "react-form",
     "react",
-    "formbold",
+    "formbold"
   ],
   "devDependencies": {
     "typescript": "^5.1.6",
