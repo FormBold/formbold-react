@@ -13,6 +13,15 @@
     "build": "tsc"
   },
   "license": "MIT",
+    "keywords": [
+    "forms",
+    "form",
+    "form-api",
+    "web-form",
+    "react-form",
+    "react",
+    "formbold",
+  ],
   "devDependencies": {
     "typescript": "^5.1.6",
     "@types/react-dom": "^18.2.6"
