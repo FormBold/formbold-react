@@ -1,7 +1,10 @@
 
 # Formbold-react — The easiest way to configure and use Form in React/Next.js
+React package for [FormBold](https://formbold.com/) React npm package which simplifies the integration of FormBold with React/Next.js projects.
 
-Formbold is a user-friendly online form builder that simplifies the process of creating customized forms for various purposes. It offers a wide range of form fields, advanced features like conditional logic, and seamless integration with other tools.
+FormBold is a multipurpose form API and serverless backend solution compatible with all hosting, SSG, and frameworks. It allows you to receive form submissions directly in your email, slack, telegram, notion, and more. It's ready for use with any Static, Jamstack, and SSG sites, such as HTML, React, Next.js, Gatsby, Vue, Nuxt, Hugo, and Jekyll.
+
+It offers a wide range of form fields, advanced features like conditional logic, and seamless integration with other tools.
 
 ## Installation
 
