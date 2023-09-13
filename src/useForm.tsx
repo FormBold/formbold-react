@@ -12,13 +12,22 @@ const useForm = (formId: string) => {
   });
   const [succeeded, setSucceeded] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (
+    e: React.FormEvent<HTMLFormElement>,
+    recaptchaRef?: { current: { getValue: () => any } }
+  ) => {
     e.preventDefault();
 
     // Getting the Form data
     const data = new FormData(e.currentTarget);
     //@ts-ignore
     const value = Object.fromEntries(data.entries());
+    const finalData = { ...value };
+
+    // Conditionally add "g-recaptcha-response" if recaptchaRef is provided
+    if (recaptchaRef) {
+      finalData["g-recaptcha-response"] = recaptchaRef.current.getValue();
+    }
 
     //check if the values is empty
     //@ts-ignore
@@ -36,9 +45,8 @@ const useForm = (formId: string) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(value),
+      body: JSON.stringify(finalData),
     })
-      //@ts-ignore
       .then((res) => {
         setSucceeded(true);
       })

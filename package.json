@@ -13,7 +13,7 @@
     "build": "tsc"
   },
   "license": "MIT",
-    "keywords": [
+  "keywords": [
     "forms",
     "form",
     "form-api",
@@ -23,8 +23,8 @@
     "formbold"
   ],
   "devDependencies": {
-    "typescript": "^5.1.6",
-    "@types/react-dom": "^18.2.6"
+    "@types/react-dom": "^18.2.6",
+    "typescript": "^5.1.6"
   },
   "peerDependencies": {
     "@types/react": "^18.2.14",
