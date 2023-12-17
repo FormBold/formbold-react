@@ -3,6 +3,11 @@
   "version": "1.0.4",
   "description": "Formbold package for react.",
   "main": "dist/index.js",
+  "types": "./dist/index.ts",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "default": "./dist/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FormBold/formbold-react"
@@ -10,7 +15,7 @@
   "author": "Formbold Team <hello@formbold.com> (https://formbold.com/)",
   "homepage": "https://formbold.com/",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc --declaration"
   },
   "license": "MIT",
   "keywords": [
