@@ -24,7 +24,7 @@ To use it you have to import it in your Form component. Then call it with the fo
 
 And at the end, attach the handleSubmit function to the onSubmit event. 
 
-```bash
+```typescript
 import { useForm } from "formbold-react";
 
 function Form() {
@@ -41,7 +41,7 @@ function Form() {
         <label htmlFor="email">Email Address</label>
         <input id="email" type="email" name="email" required />
         <textarea id="message" name="message" required />
-        <button type="submit">Submit</button>
+        <button type="submit">{state.submitting ? "Submitting..." : "Submit"}</button>
 
         <div>
           {state.error && state.error.message}
@@ -53,6 +53,34 @@ function Form() {
 
 export default Form;
 ```
+
+## Required fields
+
+To make certain fields mandatory in your form, you can use the `requiredFields` option when using the `useForm` hook. In the example below, the `email` field is set as a required field:
+
+```typescript
+const [state, handleSubmit] = useForm("form_id", { requiredFields: ["email"] });
+```
+This ensures that the form cannot be submitted unless the `email` field is filled out by the user.
+
+
+## Custom error messages
+You can customize the error messages displayed when certain fields are not filled out in your form. By using the `errorsMessages` option in the `useForm` hook, you can provide custom error messages for different scenarios. 
+
+Here's an example of how you can set custom error messages for the `name` and `email` fields:
+
+```typescript
+const [state, handleSubmit] = useForm("form_id", {
+  requiredFields: ["name", "email"],
+  errorsMessages: {
+    empty: "Please fill the form!",
+    required: fields => `Please fill the required fields: ${fields.join(", ")}`,
+  }
+});
+```
+
+Feel free to customize the error messages according to your specific requirements.
+
 
 ## ****Useful Links and Information****
 
