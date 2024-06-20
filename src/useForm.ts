@@ -16,7 +16,7 @@ const defaultErrorState: ErrorState = {
   status: false,
 };
 
-const FORM_BOLD_API = 'https://formbold.com/s/';
+const FORM_BOLD_SUBMISSION_API = 'https://formbold.com/s';
 
 /**
  * FormBold useForm hook
@@ -68,7 +68,7 @@ const useForm = (formId: string, config?: Config) => {
     setSubmitting(true);
 
     // submit the form
-    fetch(`${FORM_BOLD_API}/${formId}`, {
+    fetch(`${FORM_BOLD_SUBMISSION_API}/${formId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
