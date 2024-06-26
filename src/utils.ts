@@ -9,5 +9,5 @@ import { Config, DeepRequired } from './types';
  */
 export const mergeConfig = (defaultConfig: DeepRequired<Config>, config: Config = {}) => {
   const errorMessages = { ...defaultConfig.errorMessages, ...(config.errorMessages ?? {}) };
-  return { ...defaultConfig, ...config, errorMessages } as DeepRequired<Config>;
+  return { ...defaultConfig, ...config, errorMessages }
 };

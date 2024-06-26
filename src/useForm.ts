@@ -73,7 +73,7 @@ const useForm = (formId: string, config?: Config) => {
       },
       body: JSON.stringify(finalData),
     })
-      .then(res => {
+      .then(() => {
         setSucceeded(true);
         setError(defaultErrorState);
       })
@@ -93,3 +93,4 @@ const useForm = (formId: string, config?: Config) => {
 };
 
 export { useForm };
+
