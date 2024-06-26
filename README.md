@@ -65,14 +65,14 @@ This ensures that the form cannot be submitted unless the `email` field is fille
 
 
 ## Custom error messages
-You can customize the error messages displayed when certain fields are not filled out in your form. By using the `errorsMessages` option in the `useForm` hook, you can provide custom error messages for different scenarios. 
+You can customize the error messages displayed when certain fields are not filled out in your form. By using the `errorMessages` option in the `useForm` hook, you can provide custom error messages for different scenarios. 
 
 Here's an example of how you can set custom error messages for the `name` and `email` fields:
 
 ```typescript
 const [state, handleSubmit] = useForm("form_id", {
   requiredFields: ["name", "email"],
-  errorsMessages: {
+  errorMessages: {
     empty: "Please fill the form!",
     required: fields => `Please fill the required fields: ${fields.join(", ")}`,
   }
