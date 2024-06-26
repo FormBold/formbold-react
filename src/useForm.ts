@@ -1,10 +1,9 @@
-import { useState } from "react";
-import { CaptchaRef, Config, ErrorState } from "./types";
-import { mergeConfig } from "./utils";
+import { useState } from 'react';
+import { CaptchaRef, Config, DeepRequired, ErrorState } from './types';
+import { mergeConfig } from './utils';
 
-
-const defaultConfig: Required<Config> = {
-  errorsMessages: {
+const defaultConfig: DeepRequired<Config> = {
+  errorMessages: {
     empty: 'Please fill the form!',
     required: fields => `Please fill the required fields: ${fields.join(', ')}`,
   },
@@ -25,8 +24,7 @@ const FORM_BOLD_SUBMISSION_API = 'https://formbold.com/s';
  * @returns An array containing the form state and the submit handler
  */
 const useForm = (formId: string, config?: Config) => {
-  const { requiredFields, errorsMessages } = mergeConfig(defaultConfig, config);
-
+  const { requiredFields, errorMessages } = mergeConfig(defaultConfig, config);
   const [error, setError] = useState<ErrorState>(defaultErrorState);
   const [succeeded, setSucceeded] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -50,7 +48,7 @@ const useForm = (formId: string, config?: Config) => {
     const isEmpty = !Object.values(value).some(x => x !== null && x !== '');
     if (isEmpty) {
       return setError({
-        message: errorsMessages.empty,
+        message: errorMessages.empty,
         status: true,
       });
     }
@@ -60,7 +58,7 @@ const useForm = (formId: string, config?: Config) => {
 
     if (requiredFieldsEmpty.length > 0) {
       return setError({
-        message: errorsMessages.required(requiredFieldsEmpty),
+        message: errorMessages.required(requiredFieldsEmpty),
         status: true,
       });
     }
@@ -77,6 +75,7 @@ const useForm = (formId: string, config?: Config) => {
     })
       .then(res => {
         setSucceeded(true);
+        setError(defaultErrorState);
       })
       .catch(error => {
         setError({
@@ -92,6 +91,5 @@ const useForm = (formId: string, config?: Config) => {
 
   return [{ error, succeeded, submitting }, handleSubmit] as const;
 };
-
 
 export { useForm };
