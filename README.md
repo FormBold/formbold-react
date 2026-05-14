@@ -1,4 +1,3 @@
-
 # Formbold-react — The easiest way to configure and use Form in React/Next.js
 React package for [FormBold](https://formbold.com/) which simplifies the integration of FormBold with React/Next.js projects.
 
@@ -6,82 +5,133 @@ FormBold is a multipurpose form API and serverless backend solution compatible w
 
 It offers a wide range of form fields, advanced features like conditional logic, and seamless integration with other tools.
 
+It helps you wire a form to FormBold with a small API, built-in validation for required fields, custom error messages, and basic submission state.
+
 ## Installation
 
 ```bash
 npm install formbold-react
 ```
 
-or
-
 ```bash
 yarn add formbold-react
 ```
 
-## Usages
+## Usage
 
-To use it you have to import it in your Form component. Then call it with the form_id. 
+Import `useForm`, pass your FormBold `formId`, and attach the returned `handleSubmit` function to your form.
 
-And at the end, attach the handleSubmit function to the onSubmit event. 
-
-```typescript
+```tsx
 import { useForm } from "formbold-react";
 
-function Form() {
+function ContactForm() {
   const [state, handleSubmit] = useForm("form_id");
 
   if (state.succeeded) {
-    return <div>Form submitted successfully</div>;
+    return <div>Form submitted successfully.</div>;
   }
 
   return (
-    <>
-      <h1>Home Page</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email Address</label>
-        <input id="email" type="email" name="email" required />
-        <textarea id="message" name="message" required />
-        <button type="submit">{state.submitting ? "Submitting..." : "Submit"}</button>
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="email">Email Address</label>
+      <input id="email" type="email" name="email" required />
 
-        <div>
-          {state.error && state.error.message}
-        </div>
-      </form>
-    </>
+      <label htmlFor="message">Message</label>
+      <textarea id="message" name="message" required />
+
+      <button type="submit">
+        {state.submitting ? "Submitting..." : "Submit"}
+      </button>
+
+      {state.error.status && <p>{state.error.message}</p>}
+    </form>
   );
 }
 
-export default Form;
+export default ContactForm;
 ```
 
-## Required fields
+## API
 
-To make certain fields mandatory in your form, you can use the `requiredFields` option when using the `useForm` hook. In the example below, the `email` field is set as a required field:
+### `useForm(formId, config?)`
 
-```typescript
-const [state, handleSubmit] = useForm("form_id", { requiredFields: ["email"] });
+```ts
+const [state, handleSubmit] = useForm("form_id", config);
 ```
-This ensures that the form cannot be submitted unless the `email` field is filled out by the user.
 
+Returns:
 
-## Custom error messages
-You can customize the error messages displayed when certain fields are not filled out in your form. By using the `errorMessages` option in the `useForm` hook, you can provide custom error messages for different scenarios. 
+```ts
+[
+  {
+    error: { message: string; status: boolean };
+    succeeded: boolean;
+    submitting: boolean;
+  },
+  (event, recaptchaRef?) => void
+]
+```
 
-Here's an example of how you can set custom error messages for the `name` and `email` fields:
+### `config`
 
-```typescript
+```ts
+type Config = {
+  requiredFields?: string[];
+  errorMessages?: {
+    empty?: string;
+    required?: (fields: string[]) => string;
+  };
+};
+```
+
+Example:
+
+```ts
 const [state, handleSubmit] = useForm("form_id", {
   requiredFields: ["name", "email"],
   errorMessages: {
     empty: "Please fill the form!",
     required: fields => `Please fill the required fields: ${fields.join(", ")}`,
-  }
+  },
 });
 ```
 
-Feel free to customize the error messages according to your specific requirements.
+### Required fields
 
+Use `requiredFields` when you want the hook to block submission until specific inputs are filled.
 
-## ****Useful Links and Information****
+```ts
+const [state, handleSubmit] = useForm("form_id", {
+  requiredFields: ["email"],
+});
+```
 
-For more information visit the [documentation](https://formbold.com/docs).
+### reCAPTCHA support
+
+If you use reCAPTCHA, pass the ref as the second argument to the submit handler.
+
+```tsx
+<form onSubmit={e => handleSubmit(e, recaptchaRef)}>
+```
+
+The hook will include `g-recaptcha-response` in the submitted payload when a ref is provided.
+
+## Behavior notes
+
+- Empty forms are rejected before the request is sent.
+- Required field validation runs before submission.
+- Non-2xx responses are treated as submission failures.
+- Repeated form fields are preserved as arrays in the request payload.
+
+## Types
+
+The package exports its public types from the root entry point:
+
+```ts
+import type { Config, ErrorState, CaptchaRef } from "formbold-react";
+```
+
+## Links
+
+- [FormBold docs](https://formbold.com/docs)
+- [FormBold homepage](https://formbold.com/)

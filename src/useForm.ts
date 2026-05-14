@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { CaptchaRef, Config, DeepRequired, ErrorState } from './types';
-import { mergeConfig } from './utils';
+import { useState, type SyntheticEvent } from 'react';
+import { CaptchaRef, Config, DeepRequired, ErrorState, FormValues } from './types';
+import { isValueEmpty, mergeConfig, toFormValues } from './utils';
 
 const defaultConfig: DeepRequired<Config> = {
   errorMessages: {
     empty: 'Please fill the form!',
-    required: fields => `Please fill the required fields: ${fields.join(', ')}`,
+    required: (fields: string[]) => `Please fill the required fields: ${fields.join(', ')}`,
   },
   requiredFields: [],
 };
@@ -29,34 +29,33 @@ const useForm = (formId: string, config?: Config) => {
   const [succeeded, setSucceeded] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>, recaptchaRef?: CaptchaRef) => {
+  const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>, recaptchaRef?: CaptchaRef) => {
     e.preventDefault();
+    setSucceeded(false);
 
-    // Getting the Form data
-    const data = new FormData(e.currentTarget);
-    //@ts-ignore
-    const value = Object.fromEntries(data.entries());
-    const finalData = { ...value };
+    const formData = new FormData(e.currentTarget);
+    const value = toFormValues(formData);
+    const finalData: FormValues = { ...value };
 
-    // Conditionally add "g-recaptcha-response" if recaptchaRef is provided
     if (recaptchaRef) {
       finalData['g-recaptcha-response'] = recaptchaRef.current.getValue();
     }
 
-    //check if the values is empty
-    //@ts-ignore
-    const isEmpty = !Object.values(value).some(x => x !== null && x !== '');
+    const isEmpty = Object.values(value).every((entry: FormDataEntryValue | FormDataEntryValue[]) =>
+      isValueEmpty(entry),
+    );
     if (isEmpty) {
+      setSucceeded(false);
       return setError({
         message: errorMessages.empty,
         status: true,
       });
     }
 
-    // Check if the required fields are empty
-    const requiredFieldsEmpty = requiredFields.filter(field => !value[field]);
+    const requiredFieldsEmpty = requiredFields.filter(field => isValueEmpty(value[field]));
 
     if (requiredFieldsEmpty.length > 0) {
+      setSucceeded(false);
       return setError({
         message: errorMessages.required(requiredFieldsEmpty),
         status: true,
@@ -65,32 +64,38 @@ const useForm = (formId: string, config?: Config) => {
 
     setSubmitting(true);
 
-    // submit the form
-    fetch(`${FORM_BOLD_SUBMISSION_API}/${formId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(finalData),
-    })
-      .then(() => {
-        setSucceeded(true);
-        setError(defaultErrorState);
-      })
-      .catch(error => {
-        setError({
-          message: error.message,
-          status: true,
-        });
-        setSucceeded(false);
-      })
-      .finally(() => {
-        setSubmitting(false);
+    try {
+      const response = await fetch(`${FORM_BOLD_SUBMISSION_API}/${formId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(finalData),
       });
+
+      if (!response.ok) {
+        const fallbackMessage = `Submission failed with status ${response.status}`;
+        const responseMessage = await response.text().catch(() => '');
+
+        throw new Error(responseMessage || fallbackMessage);
+      }
+
+      setSucceeded(true);
+      setError(defaultErrorState);
+    } catch (submitError) {
+      const message = submitError instanceof Error ? submitError.message : 'Something went wrong while submitting the form.';
+
+      setError({
+        message,
+        status: true,
+      });
+      setSucceeded(false);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return [{ error, succeeded, submitting }, handleSubmit] as const;
 };
 
 export { useForm };
-
